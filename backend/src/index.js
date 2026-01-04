@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import authRoutes from "./routes/authRoutes.js";
 
 dotenv.config();
 
@@ -38,6 +39,8 @@ const connectDB = async () => {
 const PORT = process.env.PORT || 5000;
 
 connectDB().then(() => {
+  app.use("/api/auth", authRoutes);
+
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
