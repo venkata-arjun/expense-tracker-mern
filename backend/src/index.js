@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
+import transactionRoutes from "./routes/transactionRoutes.js";
+
 
 dotenv.config();
 
@@ -40,6 +42,8 @@ const PORT = process.env.PORT || 5000;
 
 connectDB().then(() => {
   app.use("/api/auth", authRoutes);
+  app.use("/api/transactions", transactionRoutes);
+
 
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
