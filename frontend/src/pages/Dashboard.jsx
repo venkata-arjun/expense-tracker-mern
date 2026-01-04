@@ -37,8 +37,11 @@ export default function Dashboard() {
 
   const fetchBudgets = async () => {
     try {
-      const res = await getBudgets();
-      setBudgets(res.data.data);
+      const now = new Date();
+      const month = now.getMonth() + 1; // JS months are 0-based
+      const year = now.getFullYear();
+      const res = await getBudgets({ month, year });
+      setBudgets(res.data);
     } catch (err) {
       console.error("Failed to fetch budgets");
     }
