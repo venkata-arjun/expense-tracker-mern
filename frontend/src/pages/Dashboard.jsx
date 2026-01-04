@@ -4,6 +4,10 @@ import { getTransactions } from "../api/transactions";
 import TransactionForm from "../components/TransactionForm";
 import TransactionList from "../components/TransactionList";
 
+import { getBudgets } from "../api/budgets";
+import BudgetList from "../components/BudgetList";
+
+
 export default function Dashboard() {
   const { user, logout } = useAuth();
   const [transactions, setTransactions] = useState([]);

@@ -1,5 +1,6 @@
 import User from "../models/User.js";
 import { generateToken } from "../utils/jwt.js";
+import { seedCategoriesForUser } from "../utils/seedCategories.js";
 
 /* ---------- REGISTER ---------- */
 export const register = async (req, res) => {
@@ -20,6 +21,8 @@ export const register = async (req, res) => {
     password,
     authProvider: "local",
   });
+  await seedCategoriesForUser(user._id);
+
 
   const token = generateToken(user._id);
 

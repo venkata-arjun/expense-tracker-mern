@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createTransaction } from "../api/transactions";
+import { getCategories } from "../api/categories";
 
 export default function TransactionForm({ onAdd }) {
   const [form, setForm] = useState({
@@ -11,26 +12,51 @@ export default function TransactionForm({ onAdd }) {
     description: "",
   });
 
+  const [categories, setCategories] = useState([]);
+
+  /* ---------- FETCH CATEGORIES ---------- */
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const res = await getCategories();
+      setCategories(res.data);
+    };
+    fetchCategories();
+  }, []);
+
+  /* ---------- HANDLE CHANGE ---------- */
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  /* ---------- SUBMIT ---------- */
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     await createTransaction(form);
     onAdd();
-    setForm({ ...form, amount: "", category: "", description: "" });
+
+    setForm({
+      ...form,
+      amount: "",
+      category: "",
+      description: "",
+    });
   };
+
+  /* ---------- FILTER CATEGORIES BY TYPE ---------- */
+  const filteredCategories = categories.filter((c) => c.type === form.type);
 
   return (
     <form onSubmit={handleSubmit}>
       <h3>Add Transaction</h3>
 
+      {/* TYPE */}
       <select name="type" value={form.type} onChange={handleChange}>
         <option value="expense">Expense</option>
         <option value="income">Income</option>
       </select>
 
+      {/* AMOUNT */}
       <input
         name="amount"
         type="number"
@@ -40,14 +66,22 @@ export default function TransactionForm({ onAdd }) {
         required
       />
 
-      <input
+      {/* CATEGORY (DB ONLY) */}
+      <select
         name="category"
         value={form.category}
         onChange={handleChange}
-        placeholder="Category"
         required
-      />
+      >
+        <option value="">Select Category</option>
+        {filteredCategories.map((c) => (
+          <option key={c._id} value={c.name}>
+            {c.name}
+          </option>
+        ))}
+      </select>
 
+      {/* PAYMENT METHOD */}
       <select
         name="paymentMethod"
         value={form.paymentMethod}
@@ -59,6 +93,7 @@ export default function TransactionForm({ onAdd }) {
         <option value="bank">Bank</option>
       </select>
 
+      {/* DATE */}
       <input
         type="date"
         name="date"
@@ -67,6 +102,7 @@ export default function TransactionForm({ onAdd }) {
         required
       />
 
+      {/* DESCRIPTION */}
       <input
         name="description"
         value={form.description}
