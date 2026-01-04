@@ -7,6 +7,8 @@ import authRoutes from "./routes/authRoutes.js";
 import transactionRoutes from "./routes/transactionRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import budgetRoutes from "./routes/budgetRoutes.js";
+import analyticsRoutes from "./routes/analyticsRoutes.js";
+import { errorHandler } from "./middlewares/errorMiddleware.js";
 
 
 dotenv.config();
@@ -47,6 +49,10 @@ connectDB().then(() => {
   app.use("/api/transactions", transactionRoutes);
   app.use("/api/categories", categoryRoutes);
   app.use("/api/budgets", budgetRoutes);
+  app.use("/api/analytics", analyticsRoutes);
+  app.use(errorHandler);
+
+
 
 
   app.listen(PORT, () => {
