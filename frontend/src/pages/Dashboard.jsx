@@ -1,33 +1,60 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { getTransactions } from "../api/transactions";
+import { getBudgets } from "../api/budgets";
+import { getAccounts } from "../api/accounts"; // Direct import
+
 import TransactionForm from "../components/TransactionForm";
 import TransactionList from "../components/TransactionList";
 import Analytics from "../components/Analytics";
-import { getBudgets } from "../api/budgets";
 import BudgetList from "../components/BudgetList";
-
 import CategoryList from "../components/CategoryList";
+import CategoryBreakdown from "../components/CategoryBreakdown";
+import AccountList from "../components/AccountList";
+
+import {
+  LogOut,
+  Wallet,
+  Tag,
+  BarChart3,
+  PlusCircle,
+  History,
+  PiggyBank,
+  List,
+  PieChart,
+  BookOpen,
+  CreditCard,
+  User as UserIcon,
+  TrendingUp,
+  TrendingDown,
+  IndianRupee,
+} from "lucide-react";
+import { Link } from "react-router-dom";
+import MobileSidebarNav from "../components/MobileSidebarNav";
 
 const TABS = [
-  { key: "budgets", label: "Budgets" },
-  { key: "categories", label: "Categories" },
-  { key: "analytics", label: "Analytics" },
-  { key: "transactions", label: "Transactions" },
+  { key: "budgets", label: "Budgets", icon: PiggyBank },
+  { key: "accounts", label: "Accounts", icon: CreditCard },
+  { key: "categories", label: "Categories", icon: List },
+  { key: "category-breakdown", label: "Breakdown", icon: PieChart },
+  { key: "analytics", label: "Analytics", icon: BarChart3 },
+  { key: "create-transaction", label: "Add Transaction", icon: PlusCircle },
+  { key: "transactions", label: "Transactions", icon: BookOpen },
 ];
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
   const [transactions, setTransactions] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [budgets, setBudgets] = useState([]);
+  const [accounts, setAccounts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("budgets");
 
   const fetchTransactions = async () => {
     setLoading(true);
     try {
-      const res = await getTransactions({ page: 1, limit: 10 });
-      setTransactions(res.data.data);
+      const res = await getTransactions({ page: 1, limit: 50 });
+      setTransactions(res.data.data || []);
     } catch (err) {
       console.error("Failed to fetch transactions");
     } finally {
@@ -38,190 +65,220 @@ export default function Dashboard() {
   const fetchBudgets = async () => {
     try {
       const now = new Date();
-      const month = now.getMonth() + 1; // JS months are 0-based
+      const month = now.getMonth() + 1;
       const year = now.getFullYear();
       const res = await getBudgets({ month, year });
-      setBudgets(res.data);
+      setBudgets(res.data || []);
     } catch (err) {
       console.error("Failed to fetch budgets");
     }
   };
 
+  const fetchAccounts = async () => {
+    try {
+      const res = await getAccounts();
+      setAccounts(res.data || []);
+    } catch (err) {
+      setAccounts([]);
+    }
+  };
+
   useEffect(() => {
-    (async () => {
-      await Promise.all([fetchTransactions(), fetchBudgets()]);
-    })();
+    Promise.all([fetchTransactions(), fetchBudgets(), fetchAccounts()]);
   }, []);
+
+  const totalBudgeted = budgets.reduce((sum, b) => sum + (b.limit || 0), 0);
+  const totalSpent = budgets.reduce((sum, b) => sum + (b.spent || 0), 0);
+  const totalRemaining = totalBudgeted - totalSpent;
+
+  const refreshData = () => {
+    fetchTransactions();
+    fetchAccounts();
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-5">
-              <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white text-xl font-bold shadow-md">
-                {user.name.charAt(0).toUpperCase()}
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">
-                  Welcome back, {user.name.split(" ")[0]}
-                </h1>
-                <p className="text-sm text-gray-500 mt-0.5">
-                  Manage your finances with confidence
-                </p>
-              </div>
-            </div>
+      <header className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Mobile Title */}
+            <h1 className="text-xl font-bold text-gray-900 sm:hidden w-full text-center ml-10">
+              Financial Dashboard
+            </h1>
 
-            <button
-              onClick={logout}
-              className="flex items-center space-x-2 px-5 py-2.5 bg-gray-800 hover:bg-gray-900 text-white text-sm font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow"
-            >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+            {/* Desktop Title */}
+            <h1 className="hidden sm:block text-2xl font-bold text-gray-900 text-center flex-1">
+              Financial Dashboard
+            </h1>
+
+            {/* Right Actions */}
+            <div className="flex items-center gap-3">
+              <Link
+                to="/profile"
+                className="hidden sm:flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 hover:bg-indigo-200 text-indigo-700 transition"
+                title="Profile"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                />
-              </svg>
-              <span>Logout</span>
-            </button>
+                <UserIcon className="w-5 h-5" />
+              </Link>
+
+              <button
+                onClick={logout}
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-xl transition"
+              >
+                <LogOut className="w-4 h-4" />
+                <span className="hidden sm:inline">Logout</span>
+              </button>
+            </div>
           </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {/* Tab Navigation */}
-        <div className="flex gap-2 mb-8 border-b border-gray-200">
-          {TABS.map((tab) => (
-            <button
-              key={tab.key}
-              className={`px-6 py-2 text-sm font-medium border-b-2 transition-colors duration-200 focus:outline-none ${
-                activeTab === tab.key
-                  ? "border-indigo-600 text-indigo-700 bg-gray-100"
-                  : "border-transparent text-gray-500 hover:text-indigo-600 hover:bg-gray-50"
-              }`}
-              onClick={() => setActiveTab(tab.key)}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
+      {/* Mobile Sidebar Navigation */}
+      <MobileSidebarNav
+        tabs={TABS}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+      />
 
-        {/* Tab Content */}
-        {activeTab === "budgets" && (
-          <section>
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-7 mb-10">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-                <h2 className="text-xl font-semibold text-gray-900 flex items-center mb-2 md:mb-0">
-                  <span className="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
-                  Active Budgets
-                </h2>
-                {budgets.length > 0 && (
-                  <div className="flex flex-col md:flex-row md:items-center gap-2 text-sm">
-                    <span className="text-gray-700 font-medium">
-                      Total Budgeted: ₹
-                      {budgets.reduce((sum, b) => sum + (b.limit || 0), 0)}
-                    </span>
-                    <span className="text-gray-700 font-medium">
-                      Remaining: ₹
-                      {budgets.reduce(
-                        (sum, b) => sum + ((b.limit || 0) - (b.spent || 0)),
-                        0
-                      )}
-                    </span>
-                  </div>
+      {/* Desktop Tab Navigation */}
+      <div className="bg-white border-b border-gray-200 sticky top-16 z-40 shadow-sm hidden sm:block">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <nav className="flex justify-center gap-2 py-4 overflow-x-auto scrollbar-hide">
+            {TABS.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.key;
+
+              return (
+                <button
+                  key={tab.key}
+                  onClick={() => setActiveTab(tab.key)}
+                  className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium text-sm transition-all duration-300 whitespace-nowrap ${
+                    isActive
+                      ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200"
+                      : "text-gray-600 hover:text-indigo-700 hover:bg-indigo-50"
+                  }`}
+                >
+                  <Icon className="w-5 h-5" />
+                  {tab.label}
+                </button>
+              );
+            })}
+          </nav>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Mobile Tab Title */}
+        <h2 className="sm:hidden text-2xl font-bold text-gray-900 text-center mb-8">
+          {TABS.find((t) => t.key === activeTab)?.label || "Dashboard"}
+        </h2>
+
+        {/* Budget Summary Cards - Only on Budgets Tab */}
+        {activeTab === "budgets" && budgets.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            {/* Total Budgeted */}
+            <div className="bg-gradient-to-br from-indigo-500 to-indigo-600 text-white rounded-2xl p-6 shadow-lg">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-indigo-100 text-sm font-medium">
+                    Total Budgeted
+                  </p>
+                  <p className="text-3xl font-bold mt-2">
+                    ₹{totalBudgeted.toLocaleString("en-IN")}
+                  </p>
+                </div>
+                <IndianRupee className="w-10 h-10 text-indigo-200" />
+              </div>
+            </div>
+
+            {/* Total Spent */}
+            <div className="bg-gradient-to-br from-red-500 to-red-600 text-white rounded-2xl p-6 shadow-lg">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-red-100 text-sm font-medium">
+                    Total Spent
+                  </p>
+                  <p className="text-3xl font-bold mt-2">
+                    ₹{totalSpent.toLocaleString("en-IN")}
+                  </p>
+                </div>
+                <TrendingDown className="w-10 h-10 text-red-200" />
+              </div>
+            </div>
+
+            {/* Remaining */}
+            <div
+              className={`rounded-2xl p-6 shadow-lg text-white ${
+                totalRemaining >= 0
+                  ? "bg-gradient-to-br from-green-500 to-green-600"
+                  : "bg-gradient-to-br from-orange-500 to-orange-600"
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium opacity-90">
+                    {totalRemaining >= 0 ? "Remaining" : "Overspent"}
+                  </p>
+                  <p className="text-3xl font-bold mt-2">
+                    ₹{Math.abs(totalRemaining).toLocaleString("en-IN")}
+                  </p>
+                </div>
+                {totalRemaining >= 0 ? (
+                  <TrendingUp className="w-10 h-10 opacity-80" />
+                ) : (
+                  <TrendingDown className="w-10 h-10 opacity-80" />
                 )}
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Content Card */}
+        <div className="bg-white rounded-3xl shadow-lg overflow-hidden">
+          <div className="p-6 lg:p-10">
+            {activeTab === "budgets" && (
               <BudgetList budgets={budgets} onBudgetAdded={fetchBudgets} />
-            </div>
-          </section>
-        )}
+            )}
 
-        {activeTab === "categories" && <CategoryList />}
+            {activeTab === "accounts" && (
+              <AccountList accounts={accounts} fetchAccounts={fetchAccounts} />
+            )}
 
-        {activeTab === "analytics" && (
-          <section>
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-7 mb-10">
-              <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
-                <span className="w-2 h-2 bg-indigo-500 rounded-full mr-3"></span>
-                Financial Analytics
-              </h2>
-              <Analytics />
-            </div>
-          </section>
-        )}
+            {activeTab === "categories" && <CategoryList />}
 
-        {activeTab === "transactions" && (
-          <>
-            <section className="mb-10">
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-7 hover:shadow-md transition-shadow duration-300">
-                <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
-                  <span className="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
-                  Add New Transaction
-                </h2>
-                <TransactionForm onAdd={fetchTransactions} />
+            {activeTab === "category-breakdown" && <CategoryBreakdown />}
+
+            {activeTab === "analytics" && <Analytics />}
+
+            {activeTab === "create-transaction" && (
+              <div className="max-w-3xl mx-auto">
+                <TransactionForm onAdd={refreshData} />
               </div>
-            </section>
-            <section>
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-7 hover:shadow-md transition-shadow duration-300">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-semibold text-gray-900 flex items-center">
-                    <span className="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
-                    Recent Transactions
-                  </h2>
-                  {loading && (
-                    <div className="flex items-center text-sm text-gray-500">
-                      <svg
-                        className="animate-spin -ml-1 mr-3 h-4 w-4 text-indigo-600"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                      Loading transactions...
-                    </div>
-                  )}
-                </div>
+            )}
 
+            {activeTab === "transactions" && (
+              <div>
                 {loading ? (
                   <div className="space-y-4">
-                    {[1, 2, 3, 4].map((i) => (
+                    {[...Array(6)].map((_, i) => (
                       <div
                         key={i}
-                        className="animate-pulse bg-gray-100 rounded-xl h-20"
-                      ></div>
+                        className="h-24 bg-gray-100 rounded-2xl animate-pulse"
+                      />
                     ))}
                   </div>
                 ) : (
                   <TransactionList
                     transactions={transactions}
-                    onDelete={fetchTransactions}
+                    onRefresh={refreshData}
                   />
                 )}
               </div>
-            </section>
-          </>
-        )}
+            )}
+          </div>
+        </div>
       </main>
     </div>
   );

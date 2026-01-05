@@ -17,13 +17,23 @@ export const createCategory = async (req, res) => {
     return res.status(400).json({ message: "Name and type are required" });
   }
 
-  const category = await Category.create({
-    userId: req.user._id,
-    name,
-    type,
-    icon,
-    color,
-  });
-
-  res.status(201).json(category);
+  try {
+    const category = await Category.create({
+      userId: req.user._id,
+      name,
+      type,
+      icon,
+      color,
+    });
+    res.status(201).json(category);
+  } catch (err) {
+    if (err.code === 11000) {
+      // Duplicate key error
+      return res
+        .status(400)
+        .json({ message: "Category with this name already exists." });
+    }
+    console.error("Failed to create category:", err);
+    res.status(500).json({ message: "Failed to create category." });
+  }
 };

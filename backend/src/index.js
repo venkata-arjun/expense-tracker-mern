@@ -3,13 +3,14 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+
 import authRoutes from "./routes/authRoutes.js";
 import transactionRoutes from "./routes/transactionRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import budgetRoutes from "./routes/budgetRoutes.js";
 import analyticsRoutes from "./routes/analyticsRoutes.js";
+import accountRoutes from "./routes/accountRoutes.js";
 import { errorHandler } from "./middlewares/errorMiddleware.js";
-
 
 dotenv.config();
 
@@ -50,10 +51,9 @@ connectDB().then(() => {
   app.use("/api/categories", categoryRoutes);
   app.use("/api/budgets", budgetRoutes);
   app.use("/api/analytics", analyticsRoutes);
+  app.use("/api/accounts", accountRoutes);
+
   app.use(errorHandler);
-
-
-
 
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

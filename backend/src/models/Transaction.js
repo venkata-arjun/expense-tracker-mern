@@ -31,9 +31,9 @@ const transactionSchema = new mongoose.Schema(
       trim: true,
     },
 
-    paymentMethod: {
-      type: String,
-      enum: ["cash", "card", "upi", "bank"],
+    account: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Account",
       required: true,
     },
 

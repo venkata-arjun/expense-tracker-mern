@@ -7,7 +7,6 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Restore session on refresh
   useEffect(() => {
     const fetchMe = async () => {
       try {
@@ -29,16 +28,12 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (name, email, password) => {
-    try {
-      const res = await api.post("/auth/register", {
-        name,
-        email,
-        password,
-      });
-      setUser(res.data.user);
-    } catch (err) {
-      throw err;
-    }
+    const res = await api.post("/auth/register", {
+      name,
+      email,
+      password,
+    });
+    setUser(res.data.user);
   };
 
   const logout = async () => {
@@ -53,4 +48,11 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+// 🔥 THIS EXPORT MUST EXIST
+export const useAuth = () => {
+  const ctx = useContext(AuthContext);
+  if (!ctx) {
+    throw new Error("useAuth must be used inside AuthProvider");
+  }
+  return ctx;
+};

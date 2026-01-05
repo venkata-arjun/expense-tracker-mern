@@ -1,14 +1,17 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
-import { Mail, Lock, LogIn } from "lucide-react"; // Optional icons for better UX
+import { useNavigate, Link } from "react-router-dom";
+import { Mail, Lock, LogIn } from "lucide-react";
 
 export default function Login() {
   const { user, login } = useAuth();
   const navigate = useNavigate();
 
+  // ✅ Redirect ONLY if already logged in
   useEffect(() => {
-    if (user) navigate("/");
+    if (user) {
+      navigate("/dashboard");
+    }
   }, [user, navigate]);
 
   const [email, setEmail] = useState("");
@@ -23,7 +26,7 @@ export default function Login() {
 
     try {
       await login(email, password);
-      navigate("/");
+      navigate("/dashboard"); // ✅ redirect AFTER successful login
     } catch (err) {
       setError(
         err?.response?.data?.message || "Login failed. Please try again."
@@ -36,137 +39,85 @@ export default function Login() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center px-4">
       <div className="w-full max-w-md">
-        {/* Card */}
         <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 sm:p-10">
-          {/* Logo / Title */}
+          {/* Header */}
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl mb-4">
               <LogIn className="w-8 h-8 text-white" />
             </div>
             <h1 className="text-3xl font-bold text-gray-900">Welcome Back</h1>
-            <p className="text-gray-500 mt-2">
-              Sign in to your account to continue
-            </p>
+            <p className="text-gray-500 mt-2">Sign in to your account</p>
           </div>
 
-          {/* Error Message */}
+          {/* Error */}
           {error && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm flex items-center gap-2">
-              <svg
-                className="w-5 h-5 flex-shrink-0"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                  clipRule="evenodd"
-                />
-              </svg>
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
               {error}
             </div>
           )}
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Email Field */}
+            {/* Email */}
             <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                Email Address
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Email
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400" />
-                </div>
+                <Mail className="absolute left-4 top-3.5 h-5 w-5 text-gray-400" />
                 <input
-                  id="email"
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
+                  className="w-full pl-12 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   placeholder="you@example.com"
                 />
               </div>
             </div>
 
-            {/* Password Field */}
+            {/* Password */}
             <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Password
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
-                </div>
+                <Lock className="absolute left-4 top-3.5 h-5 w-5 text-gray-400" />
                 <input
-                  id="password"
                   type="password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
+                  className="w-full pl-12 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   placeholder="••••••••"
                 />
               </div>
             </div>
 
-            {/* Submit Button */}
+            {/* Submit */}
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 px-4 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
+              className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-lg shadow hover:from-blue-600 hover:to-purple-700 transition disabled:opacity-70"
             >
-              {isLoading ? (
-                <>
-                  <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                      fill="none"
-                    />
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    />
-                  </svg>
-                  Signing in...
-                </>
-              ) : (
-                <>
-                  <LogIn className="h-5 w-5" />
-                  Sign In
-                </>
-              )}
+              {isLoading ? "Signing in..." : "Sign In"}
             </button>
           </form>
 
-          {/* Footer Links (optional) */}
+          {/* Footer */}
           <div className="mt-8 text-center text-sm text-gray-500">
-            Don't have an account?{" "}
-            <a
-              href="/register"
+            Don’t have an account?{" "}
+            <Link
+              to="/register"
               className="font-medium text-blue-600 hover:text-blue-700"
             >
               Sign up
-            </a>
+            </Link>
           </div>
         </div>
 
-        {/* Optional subtle branding */}
         <p className="text-center text-xs text-gray-400 mt-8">
-          © 2026 Your Finance App. All rights reserved.
+          © 2026 Expense Tracker. All rights reserved.
         </p>
       </div>
     </div>

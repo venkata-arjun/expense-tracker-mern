@@ -1,3 +1,13 @@
+// Delete a budget by id and userId
+export const deleteBudget = async (req, res) => {
+  const { id } = req.params;
+  const userId = req.user._id;
+  const deleted = await Budget.findOneAndDelete({ _id: id, userId });
+  if (!deleted) {
+    return res.status(404).json({ message: "Budget not found" });
+  }
+  res.status(200).json({ message: "Budget deleted" });
+};
 import Budget from "../models/Budget.js";
 import Transaction from "../models/Transaction.js";
 
