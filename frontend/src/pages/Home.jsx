@@ -105,7 +105,7 @@ export default function Home() {
             {/* Hero visual */}
             <div className="relative hidden lg:block">
               <img
-                src="https://cdn.dribbble.com/userupload/37365074/file/original-e10b367e6473ae749eab12c592cc5336.png?format=webp"
+                src={import.meta.env.VITE_HERO_IMAGE_URL}
                 alt="Finlyt app dashboard showing expense tracking and charts"
                 className="rounded-2xl shadow-2xl border border-gray-100 object-cover"
                 width={600}
@@ -136,7 +136,7 @@ export default function Home() {
               {/* Feature 1 */}
               <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                 <img
-                  src="https://cdn.dribbble.com/userupload/43197822/file/original-4be89f5473d6aff86788a126555af905.webp"
+                  src={import.meta.env.VITE_FEATURE1_IMAGE_URL}
                   alt="Quick transaction entry in finance app"
                   className="w-full h-56 object-cover"
                 />
@@ -157,7 +157,7 @@ export default function Home() {
               {/* Feature 2 */}
               <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                 <img
-                  src="https://thumbs.dreamstime.com/b/abstract-visualization-glowing-data-network-graph-showing-growth-futuristic-financial-chart-upward-trend-inside-415072918.jpg"
+                  src={import.meta.env.VITE_FEATURE2_IMAGE_URL}
                   alt="Financial charts and growth visualization"
                   className="w-full h-56 object-cover"
                 />
@@ -178,7 +178,7 @@ export default function Home() {
               {/* Feature 3 */}
               <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                 <img
-                  src="https://scpr.brightspotcdn.com/dims4/default/3a660e6/2147483647/strip/true/crop/1024x683+0+0/resize/672x448!/quality/90/?url=http%3A%2F%2Fscpr-brightspot.s3.us-west-2.amazonaws.com%2Ff7%2F2c%2F7c2c77904bc9ab7bdb915324471d%2Fkelly-sikkema-3-tc-5lrorm-unsplash-1024x683.jpg"
+                  src={import.meta.env.VITE_FEATURE3_IMAGE_URL}
                   alt="Person confidently managing finances on phone"
                   className="w-full h-56 object-cover"
                 />
