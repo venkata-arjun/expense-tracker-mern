@@ -1,4 +1,4 @@
-# Finlyt: Expense Tracker
+# Finlyt – Personal Expense Tracking Platform
 
 Finlyt is a modern, full-stack expense tracker application built with the MERN stack (MongoDB, Express, React, Node.js). It empowers users to manage accounts, budgets, categories, and transactions, with advanced analytics and secure authentication.
 
