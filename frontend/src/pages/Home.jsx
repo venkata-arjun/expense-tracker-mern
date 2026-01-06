@@ -50,7 +50,6 @@ export default function Home() {
           <div className="grid lg:grid-cols-2 gap-12 xl:gap-16 items-center">
             {/* Text content */}
             <div>
-
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight tracking-tight">
                 Take control of
                 <span className="block text-indigo-600 mt-2">
