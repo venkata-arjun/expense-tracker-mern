@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import expenseImg from "../assets/expense.jpg";
 import {
   ArrowRight,
   BarChart3,
@@ -114,7 +115,7 @@ export default function Home() {
               />
               {/* Mobile image */}
               <img
-                src={require("../assets/expense.jpg")}
+                src={expenseImg}
                 alt="Expense tracking app mobile preview"
                 className="block lg:hidden w-full max-w-xs mx-auto rounded-2xl shadow-xl border border-gray-100 object-cover"
                 width={320}
