@@ -65,12 +65,21 @@ export default function TransactionDetails({
           {isIncome ? "Income" : "Expense"}
         </span>
 
-        <div
-          className={`text-3xl font-bold mt-2 ${
-            isIncome ? "text-emerald-600" : "text-rose-600"
-          }`}
-        >
-          {isIncome ? "+" : "−"}₹{Number(tx.amount).toLocaleString("en-IN")}
+        <div className="flex items-baseline justify-center gap-1 mt-2">
+          <span
+            className={`text-2xl font-bold ${
+              isIncome ? "text-emerald-600" : "text-rose-600"
+            }`}
+          >
+            {isIncome ? "+" : "−"}
+          </span>
+          <span
+            className={`text-3xl font-bold break-words ${
+              isIncome ? "text-emerald-600" : "text-rose-600"
+            }`}
+          >
+            ₹{Number(tx.amount).toLocaleString("en-IN")}
+          </span>
         </div>
       </div>
 

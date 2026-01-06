@@ -318,14 +318,16 @@ export default function TransactionList({ transactions = [], onRefresh }) {
                     </div>
                   </div>
 
-                  <div className="text-right">
-                    <p
-                      className={`text-xl sm:text-2xl font-bold ${amountColor}`}
-                    >
-                      {isIncome ? "+" : "−"}₹
-                      {Number(tx.amount).toLocaleString("en-IN")}
-                    </p>
-                    <p className="text-xs text-gray-500 mt-1">
+                  <div className="flex flex-col items-end justify-center min-w-[90px]">
+                    <div className={`flex items-baseline gap-1 ${amountColor}`}>
+                      <span className="text-lg sm:text-xl font-bold">
+                        {isIncome ? "+" : "−"}
+                      </span>
+                      <span className="text-xl sm:text-2xl font-bold break-words">
+                        ₹{Number(tx.amount).toLocaleString("en-IN")}
+                      </span>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1 text-right">
                       {new Date(tx.date).toLocaleDateString("en-IN", {
                         day: "numeric",
                         month: "short",

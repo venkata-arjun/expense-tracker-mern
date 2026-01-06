@@ -111,7 +111,7 @@ export default function TransactionForm({
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="w-full max-w-2xl mx-auto">
-        <div className="bg-white rounded-t-3xl md:rounded-3xl shadow-lg md:shadow-xl border-x md:border border-gray-100 min-h-screen md:min-h-0 px-4 py-8 md:px-8 md:py-10">
+        <div className="rounded-t-3xl md:rounded-3xl min-h-screen md:min-h-0 px-4 py-8 md:px-8 md:py-10">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-8">
             {isEdit ? "Edit Transaction" : "Add New Transaction"}
           </h2>
@@ -196,8 +196,8 @@ export default function TransactionForm({
               ))}
             </select>
 
-            {/* Date & Time */}
-            <div className="grid grid-cols-2 gap-4">
+            {/* Date & Time - always side by side, prevent collision */}
+            <div className="flex gap-4 flex-wrap">
               <input
                 type="date"
                 name="date"
@@ -205,14 +205,14 @@ export default function TransactionForm({
                 value={form.date}
                 max={new Date().toISOString().slice(0, 10)}
                 onChange={handleChange}
-                className="p-4 border rounded-2xl"
+                className="min-w-[120px] flex-1 p-4 border rounded-2xl"
               />
               <input
                 type="time"
                 name="time"
                 value={form.time}
                 onChange={handleChange}
-                className="p-4 border rounded-2xl"
+                className="min-w-[120px] flex-1 p-4 border rounded-2xl"
               />
             </div>
 
