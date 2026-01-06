@@ -202,21 +202,21 @@ export default function Home() {
 
       {/* ── Footer ──────────────────────────────────────────────── */}
       <footer className="bg-white border-t border-gray-100 mt-auto">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-12">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
-            <div className="col-span-2 sm:col-span-1">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 py-8 sm:py-12">
+          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8 md:gap-12">
+            <div className="col-span-1 flex flex-col items-start mb-8 sm:mb-0">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-semibold">
                   F
                 </div>
                 <span className="text-xl font-bold text-gray-900">Finlyt</span>
               </div>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 max-w-xs">
                 Simple, secure personal finance for everyone.
               </p>
             </div>
 
-            <div>
+            <div className="mb-8 sm:mb-0">
               <h4 className="font-semibold text-gray-900 mb-4">Product</h4>
               <ul className="space-y-3 text-sm text-gray-600">
                 <li>
@@ -232,7 +232,7 @@ export default function Home() {
               </ul>
             </div>
 
-            <div>
+            <div className="mb-8 sm:mb-0">
               <h4 className="font-semibold text-gray-900 mb-4">Company</h4>
               <ul className="space-y-3 text-sm text-gray-600">
                 <li>
@@ -270,7 +270,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="mt-12 pt-8 border-t border-gray-100 text-center text-sm text-gray-500">
+          <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-100 text-center text-xs sm:text-sm text-gray-500">
             © {new Date().getFullYear()} Finlyt • All rights reserved
           </div>
         </div>
