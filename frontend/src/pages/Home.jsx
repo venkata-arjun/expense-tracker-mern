@@ -62,6 +62,15 @@ export default function Home() {
                 </span>
               </h1>
 
+              {/* Mobile image below heading */}
+              <img
+                src={expenseImg}
+                alt="Expense tracking app mobile preview"
+                className="block lg:hidden w-full max-w-xs mx-auto rounded-2xl shadow-xl border border-gray-100 object-cover mt-6 mb-2"
+                width={320}
+                height={220}
+              />
+
               <p className="mt-6 text-lg sm:text-xl text-gray-600 leading-relaxed max-w-xl">
                 Track expenses effortlessly, set realistic budgets, and get
                 clear insights — all in one beautifully simple app.
@@ -103,26 +112,16 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Hero visual */}
-            <div className="relative">
-              {/* Desktop image */}
+            {/* Hero visual desktop only */}
+            <div className="relative hidden lg:block">
               <img
                 src={import.meta.env.VITE_HERO_IMAGE_URL}
                 alt="Finlyt app dashboard showing expense tracking and charts"
-                className="hidden lg:block rounded-2xl shadow-2xl border border-gray-100 object-cover"
+                className="rounded-2xl shadow-2xl border border-gray-100 object-cover"
                 width={600}
                 height={450}
               />
-              {/* Mobile image */}
-              <img
-                src={expenseImg}
-                alt="Expense tracking app mobile preview"
-                className="block lg:hidden w-full max-w-xs mx-auto rounded-2xl shadow-xl border border-gray-100 object-cover"
-                width={320}
-                height={220}
-              />
-
-              <div className="absolute -bottom-5 -right-5 bg-white rounded-full shadow-lg px-6 py-3 flex items-center gap-2 border border-gray-100 text-sm font-medium lg:flex hidden">
+              <div className="absolute -bottom-5 -right-5 bg-white rounded-full shadow-lg px-6 py-3 flex items-center gap-2 border border-gray-100 text-sm font-medium">
                 <CheckCircle2 size={18} className="text-emerald-600" />
                 Secure bank sync
               </div>
