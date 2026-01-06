@@ -23,13 +23,12 @@ export const register = async (req, res) => {
   });
   await seedCategoriesForUser(user._id);
 
-
   const token = generateToken(user._id);
 
   res
     .cookie("token", token, {
       httpOnly: true,
-      sameSite: "strict",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       secure: process.env.NODE_ENV === "production",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     })
@@ -66,7 +65,7 @@ export const login = async (req, res) => {
   res
     .cookie("token", token, {
       httpOnly: true,
-      sameSite: "strict",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       secure: process.env.NODE_ENV === "production",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     })
