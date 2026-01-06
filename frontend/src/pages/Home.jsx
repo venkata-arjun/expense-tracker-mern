@@ -103,16 +103,25 @@ export default function Home() {
             </div>
 
             {/* Hero visual */}
-            <div className="relative hidden lg:block">
+            <div className="relative">
+              {/* Desktop image */}
               <img
                 src={import.meta.env.VITE_HERO_IMAGE_URL}
                 alt="Finlyt app dashboard showing expense tracking and charts"
-                className="rounded-2xl shadow-2xl border border-gray-100 object-cover"
+                className="hidden lg:block rounded-2xl shadow-2xl border border-gray-100 object-cover"
                 width={600}
                 height={450}
               />
+              {/* Mobile image */}
+              <img
+                src={require("../assets/expense.jpg")}
+                alt="Expense tracking app mobile preview"
+                className="block lg:hidden w-full max-w-xs mx-auto rounded-2xl shadow-xl border border-gray-100 object-cover"
+                width={320}
+                height={220}
+              />
 
-              <div className="absolute -bottom-5 -right-5 bg-white rounded-full shadow-lg px-6 py-3 flex items-center gap-2 border border-gray-100 text-sm font-medium">
+              <div className="absolute -bottom-5 -right-5 bg-white rounded-full shadow-lg px-6 py-3 flex items-center gap-2 border border-gray-100 text-sm font-medium lg:flex hidden">
                 <CheckCircle2 size={18} className="text-emerald-600" />
                 Secure bank sync
               </div>
